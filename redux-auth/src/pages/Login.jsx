@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginInitiate } from "../redux/actions/action";
@@ -9,9 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [like, setLike] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const dispatch = useDispatch();
+  // const [error, setError] = useState("");
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { user, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      history.push("/user/home");
+    }
+  }, [user]);
 
   const SHOWPASSWORD = (e) => {
     if (e.target.checked == true) {
@@ -20,10 +28,41 @@ const Login = () => {
       setShowPassword(false);
     }
   };
-
   const LOGINSUBMIT = async (e) => {
     e.preventDefault();
     dispatch(loginInitiate(email, password));
+    // var axios = require("axios");
+    // var qs = require("qs");
+    // var data = qs.stringify({
+    //   email: email,
+    //   password: password,
+    // });
+    // var config = {
+    //   method: "post",
+    //   url: "http://localhost:5000/auth/login",
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded",
+    //   },
+    //   data: data,
+    // };
+
+    // axios(config)
+    //   .then(function (response) {
+    //     console.log(JSON.stringify(response.data));
+    //     localStorage.setItem(
+    //       "login",
+    //       JSON.stringify({
+    //         userLogin: true,
+    //         access_token: response.data.access_token,
+    //       })
+    //     );
+    //     setEmail("");
+    //     setPassword("");
+    //     history.push("/user/home");
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error.response.data.message);
+    //   });
   };
 
   return (
